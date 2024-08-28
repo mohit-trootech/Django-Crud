@@ -15,8 +15,11 @@ from crud.constant import (
     USER_CREATE_PLACEHOLDER,
     USER_CREATE_HELP_TEXT,
     CRUD_USER_CREATE_PLACEHOLDER,
+    LOGIN_FORM_PASSWORD_PLACEHOLDER,
+    LOGIN_FORM_USERNAME_PLACEHOLDER,
+    LOGIN_FORM_PASSWORD_HELP_TEXT,
+    LOGIN_FORM_USERNAME_HELP_TEXT,
 )
-from django.contrib.auth.forms import UserCreationForm
 from core.models import CrudUser
 
 
@@ -47,20 +50,20 @@ class UserLoginForm(Form):
         widget=TextInput(
             attrs={
                 "class": "form-control",
-                "placeholder": "Please Enter Login Username",
+                "placeholder": LOGIN_FORM_USERNAME_PLACEHOLDER,
             }
         ),
-        help_text="Username is Required",
+        help_text=LOGIN_FORM_USERNAME_HELP_TEXT,
     )
     password = CharField(
         required=True,
         widget=PasswordInput(
             attrs={
                 "class": "form-control",
-                "placeholder": "Please Enter Login Password",
+                "placeholder": LOGIN_FORM_PASSWORD_PLACEHOLDER,
             }
         ),
-        help_text="Password is Required",
+        help_text=LOGIN_FORM_PASSWORD_HELP_TEXT,
     )
 
 

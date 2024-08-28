@@ -13,7 +13,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto align-items-center">
-                {% if request.path == '/users' %}
+                {% if request.path == '/core/users' %}
                 <li class="nav-item">
                     <a role="button" class="nav-link mx-2 active" data-bs-toggle="modal"
                         data-bs-target="#createUserModal"><i class="fas fa-plus-circle pe-2"></i>Add User</a>
@@ -25,7 +25,7 @@
                 </li>
                 {% endif %}
                 <li class="nav-item">
-                    <a class="nav-link mx-2 {% if request.path == '/info' %}active{% endif %} "
+                    <a class="nav-link mx-2 {% if 'info' in request.path %}active{% endif %} "
                         href="{% url 'info' %}"><i class="fas fa-info-circle pe-2"></i>Info</a>
                 </li>
                 <li class="nav-item">

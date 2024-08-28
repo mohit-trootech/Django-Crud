@@ -5,7 +5,9 @@
 STATIC = "static/"
 MEDIA = "media/"
 TEMPLATES = "templates/"
-
+TZ_ASIA_KOLKATA = "Asia/Kolkata"
+EN_US = "en-us"
+STATIC_DIRS = "templates/static"
 # Debug Toolbar
 
 DEBUG_TOOLBAR_IP = "127.0.0.1"
@@ -18,7 +20,13 @@ REGISTRATION_TEMPLATE = "register.html"
 INFO_TEMPLATE = "info.html"
 PROFILE_TEMPLATE = "profile.html"
 
-# Placeholders Update Form
+# Placeholders Form
+LOGIN_FORM_USERNAME_PLACEHOLDER = "Please Enter Login Username"
+LOGIN_FORM_USERNAME_HELP_TEXT = "Please Enter Login Username"
+LOGIN_FORM_PASSWORD_PLACEHOLDER = "Please Enter Login Password"
+LOGIN_FORM_PASSWORD_HELP_TEXT = "Password is Required"
+
+
 USER_UPDATE_PLACEHOLDER = {
     "first_name": "Please Enter First Name",
     "last_name": "Please Enter Last Name",
@@ -57,3 +65,14 @@ PASSWORD_NOT_MATCH = "Please Check Passwords are Not Matching"
 # Success
 LOGIN_SUCCESS = "Logged in Successfully"
 SIGNUP_SUCCESS = "User Registered Successfully"
+LOGOUT_SUCCESS = "User Logged Out Successfully"
+
+# Cache Variables
+CACHE_TABLE_NAME = "cache_table"
+
+# Context Object Names
+USERS = "users"
+
+# URLS
+USERS_URL = "/users"
+LOGIN_URL = "/accounts/login"

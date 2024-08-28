@@ -1,5 +1,4 @@
 from django.views.generic import ListView, View, TemplateView, UpdateView, FormView
-from django.views.generic.edit import FormMixin
 from crud.constant import (
     HOME_TEMPLATE,
     LOGIN_TEMPLATE,
@@ -12,12 +11,15 @@ from crud.constant import (
     LOGIN_SUCCESS,
     SIGNUP_SUCCESS,
     PASSWORD_NOT_MATCH,
+    LOGOUT_SUCCESS,
+    USERS,
+    USERS_URL,
+    LOGIN_URL,
 )
 from crud.forms import (
     UserProfileUpdateForm,
     UserLoginForm,
     UserSignupForm,
-    CrudUserForm,
 )
 from django.contrib.auth import login, logout, authenticate, models
 from django.contrib.messages import info
@@ -28,28 +30,17 @@ from django.core.exceptions import ValidationError
 from core.models import CrudUser
 import json
 from django.http import JsonResponse
-from crud.utils import create_crud_user_object
+from core.utils import create_crud_user_object
 
 
-class IndexView(ListView):
-    model = CrudUser
-    template_name = HOME_TEMPLATE
-    context_object_name = "users"
-    paginate_by = 10
-
-    def get_template_names(self) -> list[str]:
-        if self.request.htmx:
-            return USER_ROW_TEMPLATE
-        else:
-            return self.template_name
 
 
 class LogoutView(View):
 
     def get(self, request):
         logout(request)
-        info(request, "User Logged Out Successfully")
-        return redirect("/users")
+        info(request, LOGOUT_SUCCESS)
+        return redirect(USERS_URL)
 
 
 class ProfileView(UpdateView):
@@ -67,7 +58,7 @@ class ProfileView(UpdateView):
 class LoginView(FormView):
     template_name = LOGIN_TEMPLATE
     form_class = UserLoginForm
-    success_url = "/users"
+    success_url = USERS_URL
 
     def form_valid(self, form):
         user = authenticate(
@@ -86,7 +77,7 @@ class LoginView(FormView):
 class RegistrationView(FormView):
     template_name = REGISTRATION_TEMPLATE
     form_class = UserSignupForm
-    success_url = "/accounts/login"
+    success_url = LOGIN_URL
 
     def form_valid(self, form):
         try:
@@ -106,20 +97,3 @@ class RegistrationView(FormView):
             return super().form_invalid(form)
 
 
-@login_not_required
-class InfoView(TemplateView):
-    template_name = INFO_TEMPLATE
-
-
-class AddUser(View):
-
-    def post(self, request):
-        data = json.loads(request.POST.get("data"))
-        obj = create_crud_user_object(data)
-        response = {
-            "id": obj.get("id"),
-            "title": obj.get("title"),
-            "age": obj.get("age"),
-            "status": "Active" if obj.get("status") else "Unactive",
-        }
-        return JsonResponse(response)

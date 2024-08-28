@@ -13,7 +13,16 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from dotenv import dotenv_values
 import os
-from crud.constant import MEDIA, STATIC, TEMPLATES, DEBUG_TOOLBAR_IP
+from crud.constant import (
+    MEDIA,
+    STATIC,
+    TEMPLATES,
+    DEBUG_TOOLBAR_IP,
+    CACHE_TABLE_NAME,
+    TZ_ASIA_KOLKATA,
+    EN_US,
+    STATIC_DIRS,
+)
 
 config = dotenv_values(".env")
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -50,8 +59,10 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
     "login_required.middleware.LoginRequiredMiddleware",
+    "django.middleware.cache.UpdateCacheMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.cache.FetchFromCacheMiddleware",
 ]
-
 ROOT_URLCONF = "crud.urls"
 
 TEMPLATES = [
@@ -106,9 +117,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = EN_US
 
-TIME_ZONE = "Asia/Kolkata"
+TIME_ZONE = TZ_ASIA_KOLKATA
 
 USE_I18N = False
 
@@ -119,7 +130,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = STATIC
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "templates/static")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, STATIC_DIRS)]
 STATIC_ROOT = STATIC
 
 MEDIA_ROOT = os.path.join(BASE_DIR, MEDIA)
@@ -129,3 +140,10 @@ MEDIA_URL = MEDIA
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": CACHE_TABLE_NAME,
+    }
+}

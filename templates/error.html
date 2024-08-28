@@ -1,7 +1,7 @@
 {% if form.errors %}
-<div class="position-absolute top-0 end-0 m-3" id="toastContainer">
+<div class="position-absolute top-0 end-0 m-3">
     <div class="toast align-items-center text-bg-primary border-0 show" role="alert" aria-live="assertive"
-        aria-atomic="true" data-bs-delay='{"show":0,"hide":5000}' data-bs-hide="5000">
+        aria-atomic="true">
         <div class="d-flex">
             <div class="toast-body">
                 {% for field in form %}
@@ -19,9 +19,9 @@
 </div>
 {% endif %}
 {% if messages %}
-<div class="position-absolute top-0 end-0 m-3" id="toastContainer">
+<div class="position-absolute top-0 end-0 m-3">
     <div class="toast align-items-center text-bg-primary border-0 show" role="alert" aria-live="assertive"
-        aria-atomic="true" data-bs-delay='{"show":0,"hide":5000}' data-bs-hide="5000">
+        aria-atomic="true">
         <div class="d-flex">
             <div class="toast-body">
                 {% for message in messages %}
@@ -33,16 +33,3 @@
     </div>
 </div>
 {% endif %}
-
-{% block error_script_js %}
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const toast = document.getElementById("toastContainer");
-        setTimeout(() => {
-            if (toast) {
-                toast.style.display = "none";
-            };
-        }, 3000);
-    });
-</script>
-{% endblock %}

@@ -23,14 +23,11 @@
 
 // Toast
 document.addEventListener("DOMContentLoaded", (event) => {
-  // Get the toast element
   var myToastEl = document.getElementById("myToast");
-
-  // Create a new Toast instance with options
   var myToast = new bootstrap.Toast(myToastEl, {
     animation: true,
     autohide: true,
-    delay: 5000, // Time in milliseconds (e.g., 5000ms = 5 seconds)
+    delay: 5000,
   });
 
   // Show the toast
@@ -52,13 +49,14 @@ function crudUserSubmitForm(event) {
   };
   form.reset();
   $.ajax({
-    url: `/add_user`,
+    url: `/core/add_user`,
     type: "POST",
     data: {
       csrfmiddlewaretoken: csrf_token,
       data: JSON.stringify(data),
     },
     success: function (response) {
+      $("#createUserModal").modal("hide");
       let table = document.getElementById("usersListTable");
       let row = table.insertRow(1);
       let cell1 = row.insertCell(0);
