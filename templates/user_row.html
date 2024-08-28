@@ -6,11 +6,11 @@
     {% else %}
 <tr>
     {% endif %}
-    <th scope="row">{{user.pk}}</th>
-    <td>{{user.first_name}}</td>
-    <td>{{user.last_name}}</td>
-    <td>@{{user.username}}</td>
-    <td>{{user.email}}</td>
+    <th scope="row" class="id_{{user.pk}}">{{user.pk}}</th>
+    <td class="first_name_{{user.pk}}">{{user.first_name}}</td>
+    <td class="last_name_{{user.pk}}">{{user.last_name}}</td>
+    <td class="username_{{user.pk}}">@{{user.username}}</td>
+    <td class="email_{{user.pk}}">{{user.email}}</td>
     <td>
         <form method="post" id="userDeleteForm">
             <button type="submit" class="btn btn-danger">Delete</button>

@@ -1,5 +1,11 @@
-from django.db.models.query import QuerySet
-from django.views.generic import ListView, View, TemplateView, UpdateView
+from django.views.generic import (
+    ListView,
+    View,
+    TemplateView,
+    UpdateView,
+    CreateView,
+    FormView,
+)
 from crud.constant import (
     HOME_TEMPLATE,
     LOGIN_TEMPLATE,
@@ -8,9 +14,18 @@ from crud.constant import (
     INFO_TEMPLATE,
     PROFILE_UPDATE_SUCCESS_URL,
     PROFILE_TEMPLATE,
+    LOGIN_ERROR,
+    LOGIN_SUCCESS,
+    SIGNUP_SUCCESS,
+    PASSWORD_NOT_MATCH,
 )
-from crud.forms import UserProfileUpdateForm
+from crud.forms import UserProfileUpdateForm, UserLoginForm, UserSignupForm
 from django.contrib.auth import login, logout, authenticate, models
+from django.contrib.messages import info
+from login_required import login_not_required
+from django.shortcuts import redirect
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 
 class IndexView(ListView):
@@ -29,9 +44,10 @@ class IndexView(ListView):
 
 class LogoutView(View):
 
-    def get(self):
-        logout(self.request)
-        return "/login"
+    def get(self, request):
+        logout(request)
+        info(request, "User Logged Out Successfully")
+        return redirect("/users")
 
 
 class ProfileView(UpdateView):
@@ -45,13 +61,49 @@ class ProfileView(UpdateView):
         return PROFILE_UPDATE_SUCCESS_URL.format(pk=self.request.user.pk)
 
 
-class LoginView(TemplateView):
+@login_not_required
+class LoginView(FormView):
     template_name = LOGIN_TEMPLATE
+    form_class = UserLoginForm
+    success_url = "/users"
+
+    def form_valid(self, form):
+        user = authenticate(
+            username=form.cleaned_data["username"],
+            password=form.cleaned_data["password"],
+        )
+        if not user:
+            form.add_error(None, LOGIN_ERROR)
+            return super().form_invalid(form)
+        login(self.request, user)
+        info(self.request, LOGIN_SUCCESS)
+        return super().form_valid(form)
 
 
-class RegistrationView(TemplateView):
+@login_not_required
+class RegistrationView(FormView):
     template_name = REGISTRATION_TEMPLATE
+    form_class = UserSignupForm
+    success_url = "/accounts/login"
+
+    def form_valid(self, form):
+        try:
+            password1 = self.request.POST.get("password1")
+            password2 = self.request.POST.get("password2")
+            validate_password(password1)
+            if not password1 == password2:
+                form.add_error(None, PASSWORD_NOT_MATCH)
+                return super().form_invalid(form)
+            user = form.save(commit=False)
+            user.set_password(password1)
+            user.save()
+            info(self.request, SIGNUP_SUCCESS)
+            return super().form_valid(form)
+        except ValidationError as ve:
+            form.add_error(None, ve)
+            return super().form_invalid(form)
 
 
+@login_not_required
 class InfoView(TemplateView):
     template_name = INFO_TEMPLATE
