@@ -74,5 +74,5 @@ CACHE_TABLE_NAME = "cache_table"
 USERS = "users"
 
 # URLS
-USERS_URL = "/users"
+USERS_URL = "/core/users"
 LOGIN_URL = "/accounts/login"
