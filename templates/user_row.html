@@ -1,0 +1,22 @@
+{% block users_row %}
+{% for user in users %}
+{% if not user.pk == request.user.pk %}
+{% if forloop.last %}
+<tr hx-trigger="revealed" hx-get="{% url 'users' %}?page={{ page_obj.number|add:1 }}" hx-swap="afterend">
+    {% else %}
+<tr>
+    {% endif %}
+    <th scope="row">{{user.pk}}</th>
+    <td>{{user.first_name}}</td>
+    <td>{{user.last_name}}</td>
+    <td>@{{user.username}}</td>
+    <td>{{user.email}}</td>
+    <td>
+        <form method="post" id="userDeleteForm">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </td>
+</tr>
+{% endif %}
+{% endfor %}
+{% endblock %}

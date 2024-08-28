@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="mx-2">
+    {% if users %}
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Usename</th>
+                <th scope="col">Email</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            {% include "user_row.html" with users=users %}
+            {% block users_row %}{% endblock %}
+
+        </tbody>
+    </table>
+    {% else %}
+    <tr>
+        <div class="alert alert-danger my-4" role="alert">
+            Sorry No Polls Available &smile;
+        </div>
+    </tr>
+    {% endif %}
+</div>
+{% endblock %}
+{% block js %}
+<script src="{% static 'js/htmx_min.js' %}" defer></script>
+{% endblock %}
