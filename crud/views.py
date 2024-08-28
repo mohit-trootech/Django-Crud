@@ -1,11 +1,5 @@
-from django.views.generic import (
-    ListView,
-    View,
-    TemplateView,
-    UpdateView,
-    CreateView,
-    FormView,
-)
+from django.views.generic import ListView, View, TemplateView, UpdateView, FormView
+from django.views.generic.edit import FormMixin
 from crud.constant import (
     HOME_TEMPLATE,
     LOGIN_TEMPLATE,
@@ -19,21 +13,29 @@ from crud.constant import (
     SIGNUP_SUCCESS,
     PASSWORD_NOT_MATCH,
 )
-from crud.forms import UserProfileUpdateForm, UserLoginForm, UserSignupForm
+from crud.forms import (
+    UserProfileUpdateForm,
+    UserLoginForm,
+    UserSignupForm,
+    CrudUserForm,
+)
 from django.contrib.auth import login, logout, authenticate, models
 from django.contrib.messages import info
 from login_required import login_not_required
 from django.shortcuts import redirect
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from core.models import CrudUser
+import json
+from django.http import JsonResponse
+from crud.utils import create_crud_user_object
 
 
 class IndexView(ListView):
-    model = models.User
+    model = CrudUser
     template_name = HOME_TEMPLATE
     context_object_name = "users"
-    paginate_by = 20
-    ordering = ["id"]
+    paginate_by = 10
 
     def get_template_names(self) -> list[str]:
         if self.request.htmx:
@@ -107,3 +109,17 @@ class RegistrationView(FormView):
 @login_not_required
 class InfoView(TemplateView):
     template_name = INFO_TEMPLATE
+
+
+class AddUser(View):
+
+    def post(self, request):
+        data = json.loads(request.POST.get("data"))
+        obj = create_crud_user_object(data)
+        response = {
+            "id": obj.get("id"),
+            "title": obj.get("title"),
+            "age": obj.get("age"),
+            "status": "Active" if obj.get("status") else "Unactive",
+        }
+        return JsonResponse(response)

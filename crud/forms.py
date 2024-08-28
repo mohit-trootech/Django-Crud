@@ -6,6 +6,7 @@ from django.forms import (
     CharField,
     PasswordInput,
     NumberInput,
+    Select,
 )
 from django.contrib.auth.models import User
 from crud.constant import (
@@ -13,8 +14,10 @@ from crud.constant import (
     USER_UPDATE_HELP_TEXT,
     USER_CREATE_PLACEHOLDER,
     USER_CREATE_HELP_TEXT,
+    CRUD_USER_CREATE_PLACEHOLDER,
 )
 from django.contrib.auth.forms import UserCreationForm
+from core.models import CrudUser
 
 
 class UserProfileUpdateForm(ModelForm):
@@ -85,3 +88,35 @@ class UserSignupForm(ModelForm):
             )
             if field in ["username", "email"]:
                 help_text[field] = USER_CREATE_HELP_TEXT[field]
+
+
+class CrudUserForm(ModelForm):
+    class Meta:
+        model = CrudUser
+        fields = [
+            "title",
+            "age",
+            "status",
+        ]
+        widgets = {}
+        for field in fields:
+            input_type = TextInput
+            if field == "age":
+                input_type = NumberInput
+            elif field == "status":
+                input_type = Select
+            if not field == "status":
+                widgets[field] = input_type(
+                    attrs={
+                        "class": "form-control",
+                        "placeholder": CRUD_USER_CREATE_PLACEHOLDER[field],
+                        "required": True,
+                    }
+                )
+            else:
+                widgets[field] = input_type(
+                    attrs={
+                        "class": "form-control",
+                        "required": True,
+                    }
+                )

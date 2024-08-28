@@ -27,6 +27,7 @@ ALLOWED_HOSTS = ["*"]
 
 INTERNAL_IPS = [DEBUG_TOOLBAR_IP]
 INSTALLED_APPS = [
+    "core.apps.CoreConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

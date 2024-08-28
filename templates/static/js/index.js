@@ -21,11 +21,91 @@
   });
 })();
 
-document.addEventListener("DOMContentLoaded", () => {
-  const toast = document.getElementById("toastContainer");
-  setTimeout(() => {
-    if (toast) {
-      toast.style.display = "none";
-    }
-  }, 5000);
+// Toast
+document.addEventListener("DOMContentLoaded", (event) => {
+  // Get the toast element
+  var myToastEl = document.getElementById("myToast");
+
+  // Create a new Toast instance with options
+  var myToast = new bootstrap.Toast(myToastEl, {
+    animation: true,
+    autohide: true,
+    delay: 5000, // Time in milliseconds (e.g., 5000ms = 5 seconds)
+  });
+
+  // Show the toast
+  myToast.show();
+});
+
+// Ajax Handling
+function crudUserSubmitForm(event) {
+  event.preventDefault();
+  form = document.getElementById("userCrudForm");
+  csrf_token = event.target[0].value;
+  title = event.srcElement[1].value;
+  age = event.srcElement[2].value;
+  stat = event.srcElement[3].value;
+  let data = {
+    title: title,
+    age: age,
+    stat: stat,
+  };
+  form.reset();
+  $.ajax({
+    url: `/add_user`,
+    type: "POST",
+    data: {
+      csrfmiddlewaretoken: csrf_token,
+      data: JSON.stringify(data),
+    },
+    success: function (response) {
+      let table = document.getElementById("usersListTable");
+      let row = table.insertRow(1);
+      let cell1 = row.insertCell(0);
+      let cell2 = row.insertCell(1);
+      let cell3 = row.insertCell(2);
+      let cell4 = row.insertCell(3);
+      let cell5 = row.insertCell(4);
+
+      cell1.innerHTML = response.id;
+      cell2.innerHTML = response.title;
+      cell3.innerHTML = response.age;
+      cell4.innerHTML = `<span class="badge text-bg-success">${response.status}</span>`;
+      cell5.innerHTML = `
+          <form method="post" id="userDeleteForm">
+            <button type="submit" class="btn btn-danger">
+              Delete
+            </button>
+          </form>
+        `;
+    },
+    error: function (xhr, status, error) {
+      console.error("Error occurred:", status, error);
+    },
+  });
+}
+
+/*Theme Toggle */
+$(document).ready(() => {
+  const body = document.querySelector("body");
+  const checkbox = document.getElementById("theme");
+  loadTheme();
+  checkbox.addEventListener("change", (e) => {
+    const currentTheme = e.target.checked;
+    updateTheme(currentTheme);
+    updateThemeLocalStorage(currentTheme);
+  });
+  function loadTheme() {
+    window.localStorage.getItem("dark")
+      ? (checkbox.checked =
+          JSON.parse(window.localStorage.dark) == true ? false : true)
+      : updateThemeLocalStorage(checkbox.checked);
+    updateTheme(!JSON.parse(window.localStorage.dark));
+  }
+  function updateTheme(currentTheme) {
+    body.setAttribute("data-bs-theme", currentTheme ? "light" : "dark");
+  }
+  function updateThemeLocalStorage(currentTheme) {
+    window.localStorage.dark = !currentTheme;
+  }
 });

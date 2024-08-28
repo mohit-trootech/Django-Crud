@@ -32,6 +32,12 @@ USER_CREATE_PLACEHOLDER = {
     "username": "Please Choose Username",
 }
 
+CRUD_USER_CREATE_PLACEHOLDER = {
+    "title": "Please Choose Full Name",
+    "age": "Please Enter Age",
+}
+
+
 USER_UPDATE_HELP_TEXT = {
     "first_name": "First Name is Required Field",
     "last_name": "Last Name is Required Field",
