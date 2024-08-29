@@ -38,17 +38,21 @@ function crudUserSubmitForm(event) {
   event.preventDefault();
   form = document.getElementById("userCrudForm");
   csrf_token = event.target[0].value;
-  title = event.srcElement[1].value;
-  age = event.srcElement[2].value;
-  stat = event.srcElement[3].value;
+  first_name = event.srcElement[1].value;
+  last_name = event.srcElement[2].value;
+  email = event.srcElement[3].value;
+  username = event.srcElement[4].value;
+  password = event.srcElement[5].value;
   let data = {
-    title: title,
-    age: age,
-    stat: stat,
+    first_name: first_name,
+    last_name: last_name,
+    email: email,
+    username: username,
+    password: password,
   };
   form.reset();
   $.ajax({
-    url: `/core/add_user`,
+    url: `/core/users_handle/0`,
     type: "POST",
     data: {
       csrfmiddlewaretoken: csrf_token,
@@ -62,30 +66,46 @@ function crudUserSubmitForm(event) {
         autohide: true,
         delay: 5000,
       });
-      toastBody.innerHTML = response.content;
-      myToast.show();
-      $("#createUserModal").modal("hide");
-      let table = document.getElementById("usersListTable");
-      let row = table.insertRow(1);
-      row.setAttribute("id", `row_${response.id}`);
-      let cell1 = row.insertCell(0);
-      let cell2 = row.insertCell(1);
-      let cell3 = row.insertCell(2);
-      let cell4 = row.insertCell(3);
-      let cell5 = row.insertCell(4);
+      if (response.status == 200) {
+        let table = document.getElementById("usersListTable");
+        let row = table.insertRow(1);
+        row.setAttribute("id", `row_${response.content.id}`);
+        let cell1 = row.insertCell(0);
+        let cell2 = row.insertCell(1);
+        let cell3 = row.insertCell(2);
+        let cell4 = row.insertCell(3);
+        let cell5 = row.insertCell(4);
+        let cell6 = row.insertCell(5);
 
-      cell1.innerHTML = response.id;
-      cell2.innerHTML = response.title;
-      cell3.innerHTML = response.age;
-      cell4.innerHTML = `<span class="badge text-bg-success">${response.status}</span>`;
-      cell5.innerHTML = `
-            <button type="submit" class="btn btn-danger" onclick="deleteUser('${response.csrftoken}', ${response.id})">
+        cell1.innerHTML = response.content.id;
+        cell2.innerHTML =
+          response.content.first_name + response.content.last_name;
+        cell3.innerHTML = response.content.username;
+        cell4.innerHTML = response.content.email;
+        cell5.innerHTML = `<span class="badge text-bg-success">${response.content.is_active}</span>`;
+        cell6.innerHTML = `
+            <button type="submit" class="btn btn-danger" onclick="deleteUser('${response.content.csrftoken}', ${response.content.id})">
               Delete
             </button>
         `;
+        toastBody.innerHTML = `User Added Succesfully with id ${response.content.id}`;
+      } else if (response.status == 202) {
+        toastBody.innerHTML = response.content;
+      }
+      myToast.show();
+      $("#createUserModal").modal("hide");
     },
     error: function (status, error) {
+      var myToastEl = document.getElementById("ajaxToast");
+      var toastBody = document.getElementById("ajaxToastBody");
+      var myToast = new bootstrap.Toast(myToastEl, {
+        animation: true,
+        autohide: true,
+        delay: 5000,
+      });
+      toastBody.innerHTML = "Error occurred:" + status + error;
       console.error("Error occurred:", status, error);
+      myToast.show();
     },
   });
 }
@@ -94,11 +114,10 @@ function crudUserSubmitForm(event) {
 function deleteUser(csrf, id) {
   let deleteRow = document.getElementById(`row_${id}`);
   $.ajax({
-    url: "/core/delete_user",
-    type: "POST",
-    data: {
-      csrfmiddlewaretoken: csrf,
-      data: JSON.stringify({ id: id }),
+    url: `/core/users_handle/${id}`,
+    type: "DELETE",
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("X-CSRFToken", csrf);
     },
     success: function (response) {
       var myToastEl = document.getElementById("ajaxToast");
@@ -108,12 +127,16 @@ function deleteUser(csrf, id) {
         autohide: true,
         delay: 5000,
       });
-      if (response.status == 200) {
+      if (response.status == 204) {
         deleteRow.remove();
-        toastBody.innerHTML = response.content;
+        toastBody.innerHTML = "User Deleted Successfully";
       } else if ((response.status = 404)) {
-        toastBody.innerHTML = response.content;
-        console.error("Error occurred:", response.status, response.content);
+        toastBody.innerHTML = `User Not Found with id ${id}`;
+        console.error(
+          "Error occurred:",
+          response.status,
+          `User Not Found with id ${id}`
+        );
       }
       myToast.show();
     },

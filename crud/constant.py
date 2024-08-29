@@ -61,7 +61,7 @@ PROFILE_UPDATE_SUCCESS_URL = "/profile/{pk}"
 # Error
 LOGIN_ERROR = "Failed to Login Try Again with Correct Credentials"
 PASSWORD_NOT_MATCH = "Please Check Passwords are Not Matching"
-
+UNIQUE_USER_ERROR = "User with Same Username or Password Already Exists"
 # Success
 LOGIN_SUCCESS = "Logged in Successfully"
 SIGNUP_SUCCESS = "User Registered Successfully"
@@ -78,9 +78,7 @@ USERS_URL = "/core/users"
 LOGIN_URL = "/accounts/login"
 
 # Response Status
-STATUS_200 = 200
+STATUS_204 = 204
 STATUS_404 = 404
 # Response Content
 USER_ADDED_SUCCESS = "User Added Successfully"
-USER_DELETE_SUCCESS = "User Deleted Successfully"
-USER_DELETE_404 = "User with id {id} Not Found"

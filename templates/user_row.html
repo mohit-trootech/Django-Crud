@@ -8,10 +8,11 @@
 <tr class="text-center" id="row_{{user.id}}">
     {% endif %}
     <th scope="row" class="id_{{user.pk}}">{{user.pk}}</th>
-    <td class="title_{{user.pk}}">{{user.title}}</td>
-    <td class="age_{{user.pk}}">{{user.age}}</td>
+    <td class="name_{{user.pk}}">{{user.first_name}} {{user.last_name}}</td>
+    <td class="username_{{user.pk}}">{{user.username}}</td>
+    <td class="email_{{user.pk}}">{{user.email}}</td>
     <td class="status_{{user.pk}}">
-        {% if user.status %}
+        {% if user.is_active %}
         <span class="badge text-bg-success">Active</span>
         {% else %}
         <span class="badge text-bg-warning">Unactive</span>
