@@ -19,8 +19,13 @@
         </tbody>
     </table>
 </div>
-
+<!-- User Create Modal Start -->
 {% include 'create_user_modal.html' %}
+<!-- User Create Modal End -->
+
+<!-- User Edit Modal Start -->
+{% include 'edit_user_modal.html' %}
+<!-- User Edit Modal End -->
 {% endblock %}
 {% block js %}
 <script src="{% static 'js/htmx_min.js' %}" defer></script>

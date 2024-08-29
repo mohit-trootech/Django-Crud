@@ -7,18 +7,20 @@
     {% else %}
 <tr class="text-center" id="row_{{user.id}}">
     {% endif %}
-    <th scope="row" class="id_{{user.pk}}">{{user.pk}}</th>
-    <td class="name_{{user.pk}}">{{user.first_name}} {{user.last_name}}</td>
-    <td class="username_{{user.pk}}">{{user.username}}</td>
-    <td class="email_{{user.pk}}">{{user.email}}</td>
-    <td class="status_{{user.pk}}">
+    <th scope="row"><span class="id_{{user.pk}}">{{user.pk}}</span></th>
+    <td><span class="name_{{user.pk}}">{{user.first_name}} {{user.last_name}}</span></td>
+    <td><span class="username_{{user.pk}}">{{user.username}}</span></td>
+    <td><span class="email_{{user.pk}}">{{user.email}}</span></td>
+    <td>
         {% if user.is_active %}
-        <span class="badge text-bg-success">Active</span>
+        <span class="badge text-bg-success" class="status_{{user.pk}}">Active</span>
         {% else %}
-        <span class="badge text-bg-warning">Unactive</span>
+        <span class="badge text-bg-warning" class="status_{{user.pk}}">Unactive</span>
         {% endif %}
     </td>
     <td>
+        <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editUserModal"
+            onclick="userUpdateFormData({{user.id}})">Edit</button>
         <button type="submit" class="btn btn-danger" onclick="deleteUser({{user.id}})">Delete</button>
     </td>
 </tr>

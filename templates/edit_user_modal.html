@@ -1,0 +1,43 @@
+<!-- Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editUserModalLabel">Edit New User</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" onsubmit="userUpdateForm(event)" id="userUpdateCrudForm">
+                    <input type="number" hidden>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" value="user.first_name" required
+                            placeholder="Enter First Name">
+                        <label for="nameInput">Enter First Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" value="user.last_name" required
+                            placeholder="Enter Last Name">
+                        <label for="nameInput">Enter Last Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" value="user.email" required placeholder="Enter Email"
+                            autocomplete="email">
+                        <label for="nameInput">Enter Email Address</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                            <option value="1">Active</option>
+                            <option value="0">Unactive</option>
+                        </select>
+                        <label for="floatingSelect">Please Select Status</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary col-12">Edit
+                        User</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

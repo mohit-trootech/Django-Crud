@@ -55,7 +55,7 @@ def serialize_response_data(user_obj: dict) -> dict:
         "last_name": user_obj.get("last_name"),
         "email": user_obj.get("email"),
         "username": user_obj.get("username"),
-        "is_active": "Active" if user_obj.get("is_active") else "Unactive",
+        "is_active": 1 if int(user_obj.get("is_active")) else 0,
     }
 
 
@@ -66,9 +66,20 @@ def delete_crud_user_object(id: int) -> dict:
     :param id: int
     :return: dict
     """
-    try:
-        obj = User.objects.get(id=id)
-        obj.delete()
-        return {"status": STATUS_204}
-    except User.DoesNotExist:
-        return {"status": STATUS_404}
+    obj = User.objects.get(id=id)
+    obj.delete()
+
+
+def update_user_data(user, data: dict):
+    """
+    update user data if the user exist
+
+    :param user: queryset
+    :param data: dict
+    """
+    user.first_name = data.get("first_name", user.first_name)
+    user.last_name = data.get("last_name", user.last_name)
+    user.email = data.get("email", user.email)
+    user.is_active = data.get("is_active", user.is_active)
+    user.save(update_fields=["first_name", "last_name", "email", "is_active"])
+    return serialize_response_data(user.__dict__)

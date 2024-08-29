@@ -13,9 +13,12 @@ from core.utils import (
     create_crud_user_object,
     delete_crud_user_object,
     serialize_response_data,
+    update_user_data,
 )
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.models import User
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 class IndexView(ListView):
@@ -39,31 +42,68 @@ class IndexView(ListView):
             return self.template_name
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class HandleUser(View):
 
     def post(self, request, *args, **kwargs):
         """
         handles post request for user creation
-
-        :param request:
         """
         try:
             data = json.loads(request.POST.get("data"))
             user_obj = create_crud_user_object(data)
-            print(user_obj)
             response = serialize_response_data(user_obj)
-            return JsonResponse({"status": 200, "content": response})
+            return JsonResponse(
+                {
+                    "status": 200,
+                    "message": "user Created Successfully",
+                    "content": response,
+                }
+            )
         except UniqueUserError:
-            return JsonResponse({"status": 202, "content": UNIQUE_USER_ERROR})
+            return JsonResponse(
+                {"content": UNIQUE_USER_ERROR},
+                status=202,
+            )
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "Invalid JSON data"}, status=400)
+        except Exception as e:
+            return JsonResponse({"message": str(e)}, status=500)
 
     def delete(self, request, *args, **kwargs):
         """
         handles delete request for user deletion
-
-        :param request:
         """
-        response = delete_crud_user_object(kwargs.get("id"))
-        return JsonResponse(response)
+        try:
+            delete_crud_user_object(kwargs.get("id"))
+            return HttpResponse(status=200)
+        except User.DoesNotExist:
+            return JsonResponse({"message": "User Does Not Exists"}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "Invalid JSON data"}, status=400)
+        except Exception as e:
+            return JsonResponse({"message": str(e)}, status=500)
+
+    def put(self, request, *args, **kwargs):
+        """
+        handles update request for user updation
+        """
+        try:
+            data = json.loads(request.body)
+            id = kwargs.get("id")
+            user = User.objects.get(id=id)
+            user_obj = update_user_data(user=user, data=data)
+            return JsonResponse(
+                {
+                    "status": 200,
+                    "message": "User updated successfully",
+                    "content": user_obj,
+                }
+            )
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "Invalid JSON data"}, status=400)
+        except Exception as e:
+            return JsonResponse({"message": str(e)}, status=500)
 
 
 @login_not_required
