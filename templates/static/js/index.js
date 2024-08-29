@@ -33,15 +33,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 /*Ajax Handling for Create User */
+const csrf = document.getElementById("csrf_token").value;
 function crudUserSubmitForm(event) {
   event.preventDefault();
   form = document.getElementById("userCrudForm");
-  csrf_token = event.target[0].value;
-  first_name = event.srcElement[1].value;
-  last_name = event.srcElement[2].value;
-  email = event.srcElement[3].value;
-  username = event.srcElement[4].value;
-  password = event.srcElement[5].value;
+  first_name = event.srcElement[0].value;
+  last_name = event.srcElement[1].value;
+  email = event.srcElement[2].value;
+  username = event.srcElement[3].value;
+  password = event.srcElement[4].value;
   let data = {
     first_name: first_name,
     last_name: last_name,
@@ -50,11 +50,12 @@ function crudUserSubmitForm(event) {
     password: password,
   };
   form.reset();
+  $("#createUserModal").modal("hide");
   $.ajax({
     url: `/core/users_handle/0`,
     type: "POST",
     data: {
-      csrfmiddlewaretoken: csrf_token,
+      csrfmiddlewaretoken: csrf,
       data: JSON.stringify(data),
     },
     success: function (response) {
@@ -77,13 +78,12 @@ function crudUserSubmitForm(event) {
         let cell6 = row.insertCell(5);
 
         cell1.innerHTML = response.content.id;
-        cell2.innerHTML =
-          response.content.first_name + response.content.last_name;
+        cell2.innerHTML = `${response.content.first_name} ${response.content.last_name}`;
         cell3.innerHTML = response.content.username;
         cell4.innerHTML = response.content.email;
         cell5.innerHTML = `<span class="badge text-bg-success">${response.content.is_active}</span>`;
         cell6.innerHTML = `
-            <button type="submit" class="btn btn-danger" onclick="deleteUser('${response.content.csrftoken}', ${response.content.id})">
+            <button type="submit" class="btn btn-danger" onclick="deleteUser(${response.content.id})">
               Delete
             </button>
         `;
@@ -92,7 +92,6 @@ function crudUserSubmitForm(event) {
         toastBody.innerHTML = response.content;
       }
       myToast.show();
-      $("#createUserModal").modal("hide");
     },
     error: function (status, error) {
       var myToastEl = document.getElementById("ajaxToast");
@@ -110,7 +109,7 @@ function crudUserSubmitForm(event) {
 }
 
 /*Ajax Handling for Delete User */
-function deleteUser(csrf, id) {
+function deleteUser(id) {
   let deleteRow = document.getElementById(`row_${id}`);
   $.ajax({
     url: `/core/users_handle/${id}`,

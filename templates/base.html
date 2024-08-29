@@ -16,6 +16,7 @@
 </head>
 
 <body data-bs-theme="dark">
+    <input type="text" hidden value="{{request.COOKIES.csrftoken}}" id="csrf_token">
     <div id="main">
         <div id="navBar">
             {% include 'navbar.html' %}

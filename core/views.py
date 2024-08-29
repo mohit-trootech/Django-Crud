@@ -52,7 +52,6 @@ class HandleUser(View):
             user_obj = create_crud_user_object(data)
             print(user_obj)
             response = serialize_response_data(user_obj)
-            response["csrftoken"] = request.COOKIES.get("csrftoken")
             return JsonResponse({"status": 200, "content": response})
         except UniqueUserError:
             return JsonResponse({"status": 202, "content": UNIQUE_USER_ERROR})

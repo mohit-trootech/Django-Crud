@@ -19,8 +19,7 @@
         {% endif %}
     </td>
     <td>
-        <button type="submit" class="btn btn-danger"
-            onclick="deleteUser('{{request.COOKIES.csrftoken}}', {{user.id}})">Delete</button>
+        <button type="submit" class="btn btn-danger" onclick="deleteUser({{user.id}})">Delete</button>
     </td>
 </tr>
 {% endif %}
