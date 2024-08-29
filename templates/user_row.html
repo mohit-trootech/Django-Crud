@@ -2,10 +2,10 @@
 {% for user in users %}
 {% if not user.pk == request.user.pk %}
 {% if forloop.last %}
-<tr class="text-center" hx-trigger="revealed" hx-get="{% url 'users' %}?page={{ page_obj.number|add:1 }}"
-    hx-swap="afterend">
+<tr class="text-center" id="row_{{user.id}}" hx-trigger="revealed"
+    hx-get="{% url 'users' %}?page={{ page_obj.number|add:1 }}" hx-swap="afterend">
     {% else %}
-<tr class="text-center">
+<tr class="text-center" id="row_{{user.id}}">
     {% endif %}
     <th scope="row" class="id_{{user.pk}}">{{user.pk}}</th>
     <td class="title_{{user.pk}}">{{user.title}}</td>
@@ -18,9 +18,8 @@
         {% endif %}
     </td>
     <td>
-        <form method="post" id="userDeleteForm">
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
+        <button type="submit" class="btn btn-danger"
+            onclick="deleteUser('{{request.COOKIES.csrftoken}}', {{user.id}})">Delete</button>
     </td>
 </tr>
 {% endif %}

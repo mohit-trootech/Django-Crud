@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
     delay: 5000,
   });
 
-  // Show the toast
   myToast.show();
 });
 
@@ -56,6 +55,15 @@ function crudUserSubmitForm(event) {
       data: JSON.stringify(data),
     },
     success: function (response) {
+      var myToastEl = document.getElementById("ajaxToast");
+      var toastBody = document.getElementById("ajaxToastBody");
+      var myToast = new bootstrap.Toast(myToastEl, {
+        animation: true,
+        autohide: true,
+        delay: 5000,
+      });
+      toastBody.innerHTML = response.content;
+      myToast.show();
       $("#createUserModal").modal("hide");
       let table = document.getElementById("usersListTable");
       let row = table.insertRow(1);
@@ -70,14 +78,45 @@ function crudUserSubmitForm(event) {
       cell3.innerHTML = response.age;
       cell4.innerHTML = `<span class="badge text-bg-success">${response.status}</span>`;
       cell5.innerHTML = `
-          <form method="post" id="userDeleteForm">
             <button type="submit" class="btn btn-danger">
               Delete
             </button>
-          </form>
         `;
     },
-    error: function (xhr, status, error) {
+    error: function (status, error) {
+      console.error("Error occurred:", status, error);
+    },
+  });
+}
+
+// Delete User
+function deleteUser(csrf, id) {
+  let deleteRow = document.getElementById(`row_${id}`);
+  $.ajax({
+    url: "/core/delete_user",
+    type: "POST",
+    data: {
+      csrfmiddlewaretoken: csrf,
+      data: JSON.stringify({ id: id }),
+    },
+    success: function (response) {
+      var myToastEl = document.getElementById("ajaxToast");
+      var toastBody = document.getElementById("ajaxToastBody");
+      var myToast = new bootstrap.Toast(myToastEl, {
+        animation: true,
+        autohide: true,
+        delay: 5000,
+      });
+      if (response.status == 200) {
+        deleteRow.remove();
+        toastBody.innerHTML = response.content;
+      } else if ((response.status = 404)) {
+        toastBody.innerHTML = response.content;
+        console.error("Error occurred:", response.status, response.content);
+      }
+      myToast.show();
+    },
+    error: function (status, error) {
       console.error("Error occurred:", status, error);
     },
   });

@@ -76,3 +76,11 @@ USERS = "users"
 # URLS
 USERS_URL = "/core/users"
 LOGIN_URL = "/accounts/login"
+
+# Response Status
+STATUS_200 = 200
+STATUS_404 = 404
+# Response Content
+USER_ADDED_SUCCESS = "User Added Successfully"
+USER_DELETE_SUCCESS = "User Deleted Successfully"
+USER_DELETE_404 = "User with id {id} Not Found"

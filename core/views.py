@@ -1,9 +1,15 @@
 from login_required import login_not_required
 from core.models import CrudUser
-from crud.constant import HOME_TEMPLATE, USERS, USER_ROW_TEMPLATE, INFO_TEMPLATE
+from crud.constant import (
+    HOME_TEMPLATE,
+    USERS,
+    USER_ROW_TEMPLATE,
+    INFO_TEMPLATE,
+    USER_ADDED_SUCCESS,
+)
 from django.views.generic import ListView, View, TemplateView
 import json
-from core.utils import create_crud_user_object
+from core.utils import create_crud_user_object, delete_crud_user_object
 from django.http import JsonResponse
 
 
@@ -30,7 +36,16 @@ class AddUser(View):
             "title": obj.get("title"),
             "age": obj.get("age"),
             "status": "Active" if obj.get("status") else "Unactive",
+            "content": USER_ADDED_SUCCESS,
         }
+        return JsonResponse(response)
+
+
+class DeleteUser(View):
+
+    def post(self, request):
+        data = json.loads(request.POST.get("data"))
+        response = delete_crud_user_object(data.get("id"))
         return JsonResponse(response)
 
 
