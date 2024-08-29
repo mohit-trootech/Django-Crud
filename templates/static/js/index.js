@@ -93,13 +93,14 @@ function crudUserSubmitForm(event) {
         toastBody.innerHTML = response.message;
         console.error("Error occurred:", response.status, response.message);
       }
+      myToast.show();
     },
     error: function (xhr, status, error) {
       console.error("Error occurred:", xhr.responseText, status, error);
       toastBody.innerHTML = `Error Occured, ${status}, ${xhr.responseText}`;
+      myToast.show();
     },
   });
-  myToast.show();
 }
 
 /*Ajax Handling for Delete User */
