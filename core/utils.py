@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from crud.constant import STATUS_204, STATUS_404, UNIQUE_USER_ERROR
+from crud.constant import UNIQUE_USER_ERROR
 from django.db.models import Q
 from core.exceptions import UniqueUserError
 

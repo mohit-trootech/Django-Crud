@@ -28,8 +28,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
     autohide: true,
     delay: 5000,
   });
-
-  myToast.show();
 });
 
 /*Ajax Handling for Create User */
@@ -89,7 +87,11 @@ function crudUserSubmitForm(event) {
         `;
         toastBody.innerHTML = `User Added Succesfully with id ${response.content.id}`;
       } else if (response.status == 202) {
-        toastBody.innerHTML = response.content;
+        toastBody.innerHTML = response.message;
+        console.error("Error occurred:", response.status, response.message);
+      } else if (response.status == 400) {
+        toastBody.innerHTML = response.message;
+        console.error("Error occurred:", response.status, response.message);
       }
     },
     error: function (xhr, status, error) {
@@ -115,8 +117,16 @@ function deleteUser(id) {
     type: "DELETE",
 
     success: function (response) {
-      deleteRow.remove();
-      toastBody.innerHTML = "User Deleted Successfully";
+      if (response.status == 200) {
+        deleteRow.remove();
+        toastBody.innerHTML = "User Deleted Successfully";
+      } else if (response.status == 404) {
+        toastBody.innerHTML = response.message;
+        console.error("Error occurred:", response.status, response.message);
+      } else if (response.status == 400) {
+        toastBody.innerHTML = response.message;
+        console.error("Error occurred:", response.status, response.message);
+      }
     },
     error: function (xhr, status, error) {
       console.error("Error occurred:", xhr.responseText, status, error);
@@ -173,12 +183,20 @@ function userUpdateForm(event) {
     data: JSON.stringify(data),
     contentType: "application/json",
     success: function (response) {
-      editRow.cells[1].innerText = `${response.content.first_name} ${response.content.last_name}`;
-      editRow.cells[3].innerText = response.content.email;
-      editRow.cells[4].innerHTML = response.content["is_active"]
-        ? `<span class="badge text-bg-success">Active</span>`
-        : `<span class="badge text-bg-warning">Unactive</span>`;
-      toastBody.innerHTML = response.message;
+      if (response.status == 200) {
+        editRow.cells[1].innerText = `${response.content.first_name} ${response.content.last_name}`;
+        editRow.cells[3].innerText = response.content.email;
+        editRow.cells[4].innerHTML = response.content["is_active"]
+          ? `<span class="badge text-bg-success">Active</span>`
+          : `<span class="badge text-bg-warning">Unactive</span>`;
+        toastBody.innerHTML = response.message;
+      } else if (response.status == 404) {
+        toastBody.innerHTML = response.message;
+        console.error("Error occurred:", response.status, response.message);
+      } else if (response.status == 400) {
+        toastBody.innerHTML = response.message;
+        console.error("Error occurred:", response.status, response.message);
+      }
     },
     error: function (xhr, status, error) {
       console.error("Error occurred:", xhr.responseText, status, error);

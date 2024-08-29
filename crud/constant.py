@@ -78,7 +78,13 @@ USERS_URL = "/core/users"
 LOGIN_URL = "/accounts/login"
 
 # Response Status
-STATUS_204 = 204
+STATUS_200 = 200
+STATUS_202 = 202
+STATUS_400 = 400
 STATUS_404 = 404
+STATUS_500 = 500
 # Response Content
 USER_ADDED_SUCCESS = "User Added Successfully"
+INVALID_JSON = "Invalid JSON data"
+USER_NOT_EXIST = "User Does Not Exists"
+USER_UPDATE_SUCCESS = "User updated successfully"

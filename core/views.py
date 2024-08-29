@@ -5,6 +5,16 @@ from crud.constant import (
     USER_ROW_TEMPLATE,
     INFO_TEMPLATE,
     UNIQUE_USER_ERROR,
+    USER_ADDED_SUCCESS,
+    STATUS_200,
+    STATUS_202,
+    STATUS_400,
+    STATUS_404,
+    STATUS_500,
+    INVALID_JSON,
+    USER_ADDED_SUCCESS,
+    USER_NOT_EXIST,
+    USER_UPDATE_SUCCESS,
 )
 from core.exceptions import UniqueUserError
 from django.views.generic import ListView, View, TemplateView
@@ -55,18 +65,17 @@ class HandleUser(View):
             response = serialize_response_data(user_obj)
             return JsonResponse(
                 {
-                    "status": 200,
-                    "message": "user Created Successfully",
+                    "status": STATUS_200,
+                    "message": USER_ADDED_SUCCESS,
                     "content": response,
                 }
             )
         except UniqueUserError:
             return JsonResponse(
-                {"content": UNIQUE_USER_ERROR},
-                status=202,
+                {"message": UNIQUE_USER_ERROR, "status": STATUS_202},
             )
         except json.JSONDecodeError:
-            return JsonResponse({"message": "Invalid JSON data"}, status=400)
+            return JsonResponse({"message": INVALID_JSON, "status": STATUS_400})
         except Exception as e:
             return JsonResponse({"message": str(e)}, status=500)
 
@@ -76,13 +85,13 @@ class HandleUser(View):
         """
         try:
             delete_crud_user_object(kwargs.get("id"))
-            return HttpResponse(status=200)
+            return JsonResponse({"status": STATUS_200})
         except User.DoesNotExist:
-            return JsonResponse({"message": "User Does Not Exists"}, status=404)
+            return JsonResponse({"message": USER_NOT_EXIST}, status=STATUS_404)
         except json.JSONDecodeError:
-            return JsonResponse({"message": "Invalid JSON data"}, status=400)
+            return JsonResponse({"message": INVALID_JSON}, status=STATUS_404)
         except Exception as e:
-            return JsonResponse({"message": str(e)}, status=500)
+            return JsonResponse({"message": str(e)}, status=STATUS_500)
 
     def put(self, request, *args, **kwargs):
         """
@@ -95,15 +104,17 @@ class HandleUser(View):
             user_obj = update_user_data(user=user, data=data)
             return JsonResponse(
                 {
-                    "status": 200,
-                    "message": "User updated successfully",
+                    "status": STATUS_200,
+                    "message": USER_UPDATE_SUCCESS,
                     "content": user_obj,
                 }
             )
+        except User.DoesNotExist:
+            return JsonResponse({"message": USER_NOT_EXIST, "status": STATUS_404})
         except json.JSONDecodeError:
-            return JsonResponse({"message": "Invalid JSON data"}, status=400)
+            return JsonResponse({"message": INVALID_JSON, "status": STATUS_400})
         except Exception as e:
-            return JsonResponse({"message": str(e)}, status=500)
+            return JsonResponse({"message": str(e)}, status=STATUS_500)
 
 
 @login_not_required
