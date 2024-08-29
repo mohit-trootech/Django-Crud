@@ -1,10 +1,7 @@
-from django.views.generic import ListView, View, TemplateView, UpdateView, FormView
+from django.views.generic import View, UpdateView, FormView
 from crud.constant import (
-    HOME_TEMPLATE,
     LOGIN_TEMPLATE,
     REGISTRATION_TEMPLATE,
-    USER_ROW_TEMPLATE,
-    INFO_TEMPLATE,
     PROFILE_UPDATE_SUCCESS_URL,
     PROFILE_TEMPLATE,
     LOGIN_ERROR,
@@ -12,7 +9,6 @@ from crud.constant import (
     SIGNUP_SUCCESS,
     PASSWORD_NOT_MATCH,
     LOGOUT_SUCCESS,
-    USERS,
     USERS_URL,
     LOGIN_URL,
 )
@@ -27,12 +23,6 @@ from login_required import login_not_required
 from django.shortcuts import redirect
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from core.models import CrudUser
-import json
-from django.http import JsonResponse
-from core.utils import create_crud_user_object
-
-
 
 
 class LogoutView(View):
@@ -95,5 +85,3 @@ class RegistrationView(FormView):
         except ValidationError as ve:
             form.add_error(None, ve)
             return super().form_invalid(form)
-
-
