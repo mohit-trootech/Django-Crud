@@ -67,6 +67,7 @@ function crudUserSubmitForm(event) {
       $("#createUserModal").modal("hide");
       let table = document.getElementById("usersListTable");
       let row = table.insertRow(1);
+      row.setAttribute("id", `row_${response.id}`);
       let cell1 = row.insertCell(0);
       let cell2 = row.insertCell(1);
       let cell3 = row.insertCell(2);
@@ -78,7 +79,7 @@ function crudUserSubmitForm(event) {
       cell3.innerHTML = response.age;
       cell4.innerHTML = `<span class="badge text-bg-success">${response.status}</span>`;
       cell5.innerHTML = `
-            <button type="submit" class="btn btn-danger">
+            <button type="submit" class="btn btn-danger" onclick="deleteUser('${response.csrftoken}', ${response.id})">
               Delete
             </button>
         `;

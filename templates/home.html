@@ -13,17 +13,8 @@
             </tr>
         </thead>
         <tbody class="table-group-divider">
-            {% if users %}
             {% include "user_row.html" with users=users %}
             {% block users_row %}{% endblock %}
-            {% else %}
-            <tr>
-                <div class="alert alert-danger my-4" role="alert">
-                    Sorry No Users Available &smile;
-                </div>
-            </tr>
-            {% endif %}
-
         </tbody>
     </table>
 

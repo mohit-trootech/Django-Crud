@@ -37,6 +37,7 @@ class AddUser(View):
             "age": obj.get("age"),
             "status": "Active" if obj.get("status") else "Unactive",
             "content": USER_ADDED_SUCCESS,
+            "csrftoken": request.COOKIES.get("csrftoken"),
         }
         return JsonResponse(response)
 
