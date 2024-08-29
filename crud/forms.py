@@ -90,35 +90,3 @@ class UserSignupForm(ModelForm):
             )
             if field in ["username", "email"]:
                 help_text[field] = USER_CREATE_HELP_TEXT[field]
-
-
-# class CrudUserForm(ModelForm):
-#     class Meta:
-#         model = User
-#         fields = [
-#             "title",
-#             "age",
-#             "status",
-#         ]
-#         widgets = {}
-#         for field in fields:
-#             input_type = TextInput
-#             if field == "age":
-#                 input_type = NumberInput
-#             elif field == "status":
-#                 input_type = Select
-#             if not field == "status":
-#                 widgets[field] = input_type(
-#                     attrs={
-#                         "class": "form-control",
-#                         "placeholder": CRUD_USER_CREATE_PLACEHOLDER[field],
-#                         "required": True,
-#                     }
-#                 )
-#             else:
-#                 widgets[field] = input_type(
-#                     attrs={
-#                         "class": "form-control",
-#                         "required": True,
-#                     }
-#                 )

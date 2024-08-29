@@ -1,4 +1,9 @@
 class UniqueUserError(BaseException):
+    """
+    Exception class for unique password & username check
 
-    def __init__(self, msg, *args: object) -> None:
-        super().__init__(msg)
+    :param BaseException
+    """
+
+    def __init__(self, msg) -> None:
+        super(UniqueUserError, self).__init__(msg)

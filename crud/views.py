@@ -28,6 +28,9 @@ from django.core.exceptions import ValidationError
 class LogoutView(View):
 
     def get(self, request):
+        """
+        logout user from request
+        """
         logout(request)
         info(request, LOGOUT_SUCCESS)
         return redirect(USERS_URL)
@@ -38,9 +41,15 @@ class ProfileView(UpdateView):
     template_name = PROFILE_TEMPLATE
 
     def get_object(self):
+        """
+        get logged in user object for profile
+        """
         return models.User.objects.get(pk=self.request.user.pk)
 
     def get_success_url(self) -> str:
+        """
+        get success url based on login user details
+        """
         return PROFILE_UPDATE_SUCCESS_URL.format(pk=self.request.user.pk)
 
 
@@ -51,6 +60,12 @@ class LoginView(FormView):
     success_url = USERS_URL
 
     def form_valid(self, form):
+        """
+        login form handle, user will log in if details form is valid else if user not exist return form_invalid
+
+        :param form: _description_
+        :return: _description_
+        """
         user = authenticate(
             username=form.cleaned_data["username"],
             password=form.cleaned_data["password"],
@@ -70,6 +85,9 @@ class RegistrationView(FormView):
     success_url = LOGIN_URL
 
     def form_valid(self, form):
+        """
+        registration form handle, user signed up if form_valid else if password not match user already exist or password valiadtion return form_invalid
+        """
         try:
             password1 = self.request.POST.get("password1")
             password2 = self.request.POST.get("password2")

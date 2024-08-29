@@ -21,6 +21,12 @@ def password_check_counter_loop(password: str) -> bool:
 
 
 def create_crud_user_object(data: dict):
+    """
+    create user object based on unique username & password check else UniqueUserError
+
+    :param data: dict
+    :raises UniqueUserError: BaseException
+    """
     if not User.objects.filter(
         Q(username=data["username"])
     ) and password_check_counter_loop(data.get("password")):
@@ -36,7 +42,13 @@ def create_crud_user_object(data: dict):
     raise UniqueUserError(UNIQUE_USER_ERROR)
 
 
-def serialize_response_data(user_obj):
+def serialize_response_data(user_obj: dict) -> dict:
+    """
+    serialize user object data for custom requirements in html and for passing it as JsonResponse
+
+    :param user_obj: dict
+    :return: dict
+    """
     return {
         "id": user_obj.get("id"),
         "first_name": user_obj.get("first_name"),
@@ -47,7 +59,13 @@ def serialize_response_data(user_obj):
     }
 
 
-def delete_crud_user_object(id: int):
+def delete_crud_user_object(id: int) -> dict:
+    """
+    delete user with specific id if exist else DoesNowExist error
+
+    :param id: int
+    :return: dict
+    """
     try:
         obj = User.objects.get(id=id)
         obj.delete()

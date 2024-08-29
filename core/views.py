@@ -19,6 +19,10 @@ from django.contrib.auth.models import User
 
 
 class IndexView(ListView):
+    """
+    IndexView class to show the users data with the custom specification as class attributes
+    """
+
     model = User
     template_name = HOME_TEMPLATE
     context_object_name = USERS
@@ -26,6 +30,9 @@ class IndexView(ListView):
     ordering = ["-date_joined"]
 
     def get_template_names(self) -> list[str]:
+        """
+        infinite scrolling with django htmx, request for template with row when last object trigger in html
+        """
         if self.request.htmx:
             return USER_ROW_TEMPLATE
         else:
@@ -35,6 +42,11 @@ class IndexView(ListView):
 class HandleUser(View):
 
     def post(self, request, *args, **kwargs):
+        """
+        handles post request for user creation
+
+        :param request:
+        """
         try:
             data = json.loads(request.POST.get("data"))
             user_obj = create_crud_user_object(data)
@@ -46,10 +58,19 @@ class HandleUser(View):
             return JsonResponse({"status": 202, "content": UNIQUE_USER_ERROR})
 
     def delete(self, request, *args, **kwargs):
+        """
+        handles delete request for user deletion
+
+        :param request:
+        """
         response = delete_crud_user_object(kwargs.get("id"))
         return JsonResponse(response)
 
 
 @login_not_required
 class InfoView(TemplateView):
+    """
+    InfoView class to provide template for Project Information
+    """
+
     template_name = INFO_TEMPLATE
