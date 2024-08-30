@@ -55,7 +55,7 @@ def serialize_response_data(user_obj: dict) -> dict:
         "last_name": user_obj.get("last_name"),
         "email": user_obj.get("email"),
         "username": user_obj.get("username"),
-        "is_active": 1 if int(user_obj.get("is_active")) else 0,
+        "is_active": int(user_obj.get("is_active")),
     }
 
 

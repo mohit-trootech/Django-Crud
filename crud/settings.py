@@ -23,9 +23,11 @@ from crud.constant import (
     EN_US,
     STATIC_DIRS,
 )
+from django.utils.translation import gettext_lazy as _
 
 config = dotenv_values(".env")
 BASE_DIR = Path(__file__).resolve().parent.parent
+LOCALE_PATHS = [os.path.join(BASE_DIR, "core/locate/")]
 
 
 SECRET_KEY = config.get("SECRET_KEY")
@@ -62,6 +64,7 @@ MIDDLEWARE = [
     "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.cache.FetchFromCacheMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
 ]
 ROOT_URLCONF = "crud.urls"
 
@@ -117,14 +120,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = EN_US
-
 TIME_ZONE = TZ_ASIA_KOLKATA
 
-USE_I18N = False
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -147,3 +145,16 @@ CACHES = {
         "LOCATION": CACHE_TABLE_NAME,
     }
 }
+
+# Internatioliazation
+USE_I18N = True
+USE_L10N = True
+
+LANGUAGES = [
+    ("en", _("English")),
+    ("es", _("Spanish")),
+    ("fr", _("French")),
+    ("ka", _("Georgian")),
+    ("hi", _("Hindi")),
+]
+LANGUAGE_CODE = EN_US

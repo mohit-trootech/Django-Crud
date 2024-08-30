@@ -29,6 +29,7 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import gettext_lazy as _
 
 
 class IndexView(ListView):
@@ -50,6 +51,11 @@ class IndexView(ListView):
             return USER_ROW_TEMPLATE
         else:
             return self.template_name
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["output"] = _("Hello World")
+        return context
 
 
 @method_decorator(csrf_exempt, name="dispatch")
