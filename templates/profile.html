@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<section class="vh-100">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-xl-10">
+                <div class="card mb-5" style="border-radius: 15px;">
+                    <div class="card-body p-4">
+                        <h3 class="mb-3 text-uppercase">{{user}}</h3>
+                        <p class="small mb-0"><i class="far fa-clock fa-lg"></i> <span class="mx-2">|</span> Last Login
+                            on <strong>{{user.last_login|date:"d M Y, P"}}</strong>
+                        </p>
+                        <hr class="my-4">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <p class="mb-0 text-uppercase"><i class="fas fa-paper-plane me-2"></i> <span
+                                    class="text-muted small">{{user.first_name}} {{user.last_name}}</span></p>
+                            <p class="mb-0 text-uppercase"><i class="fab fa-mailchimp ms-4 me-2"></i> <span
+                                    class="text-muted small">{{user.email}}</span></p>
+                            <p class="mb-0 text-uppercase"><i class="fas fa-user-circle ms-4 me-2"></i> <span
+                                    class="text-muted small">Created | <small>{{user.date_joined}}</small></span>
+                                <span class="ms-3 me-4">|</span>
+                            </p>
+                            <button class="btn btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#profileUpdateModal">
+                                Update Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="profileUpdateModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="profileUpdateModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-static">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{field.id_for_label}}" class="form-label">{{field.label}}</label>
+                        {{field}}
+                        <div class="invalid-feedback">
+                            {{field.help_text}}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary col-12">Submit Form</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
